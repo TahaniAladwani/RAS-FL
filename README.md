@@ -127,7 +127,7 @@ Implements the proposed method, including:
 - global importance aggregation
 - boundary-aware structure removal
 - shrinkage-aware local training
-- optional self-distillation
+- self-distillation
 - masked validation
 - importance stabilization
 - global runtime-roadmap generation
