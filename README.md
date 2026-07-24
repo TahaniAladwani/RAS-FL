@@ -12,21 +12,58 @@ The experiments use CIFAR-10 with a VGG-style backbone and compare RAS-FL agains
 
 ## Framework
 
-The method contains two main stages.
+RAS-FL separates the system into **training clients**, which participate in federated optimization, and **deployment clients**, which execute inference under time-varying resource constraints. A single trained model supports several active capacities through a family of structured masks.
 
-### Stage I: Federated Training
+### Stage I: Federated Training and Runtime Roadmap Construction
 
-Participating clients receive the current global model and train it on local non-IID data. RAS-FL estimates structured parameter importance using the magnitude of the weight-gradient product. Client importance estimates are aggregated with sample-size weighting and an exponential moving average.
+At communication round \(t\), the server broadcasts the current global model to the selected training clients. Before local optimization, each client estimates the importance of prunable structures from the same global model state. In the implementation, importance is computed from the magnitude of the weight-gradient product and accumulated for convolutional filters and fully connected outputs.
 
-After a warm-up period, local training alternates between the full model and sampled compact subnetworks. A masked batch may also use self-distillation from the full local model. The global checkpoint is selected using a combination of full-width and masked validation accuracy.
+Each client then performs local training and returns:
 
-### Stage II: Runtime-Aware Deployment
+- its locally updated model
+- its structured importance estimates
+- its local sample count
 
-A deployment client observes its current resource state and maps it to a supported runtime configuration. The selected structured mask activates only the required channels and hidden features. RAS-FL supports:
+The server applies sample-size-weighted model averaging and updates the global importance vector using an exponential moving average. This smooths client-level variations across communication rounds.
 
-- a global roadmap derived from federated importance scores
-- a personalized roadmap that combines global and local importance
-- multiple removal levels for different runtime budgets
+Training begins with a full-model warm-up. After the warm-up period, each mini-batch may follow one of two paths:
+
+- **Full-model update:** standard cross-entropy training.
+- **Masked update:** a shrinkage level is sampled, low-importance structures are temporarily deactivated, and the masked model is trained with cross-entropy and optional self-distillation from the unmasked local model.
+
+Inactive structures do not receive gradients during a masked update. This exposes one shared parameter set to several active capacities instead of training separate models.
+
+Checkpoint selection is runtime-aware. The score combines:
+
+- full-model validation accuracy
+- average validation accuracy over selected masked configurations
+
+After selecting the best model and importance state, the server builds a boundary-aware runtime roadmap. For each supported removal percentage, the roadmap deactivates the lowest-importance feasible structures while:
+
+- preserving a minimum active ratio in every structured layer
+- protecting the first convolutional layer more strongly
+- keeping the final classifier fully active
+- using a shared importance ordering across runtime levels
+
+The output of Stage I is one selected global model together with a family of runtime-selectable structured masks.
+
+### Stage II: Runtime Deployment and Optional Personalization
+
+The server distributes the selected global model and runtime roadmap to deployment clients. These clients do not take part in further federated optimization, and the shared model weights remain fixed during inference.
+
+For deployment client \(u\), the current resource state may include:
+
+- available memory
+- processor load
+- battery level
+- thermal condition
+- latency requirement
+
+A runtime policy maps this state to one supported shrinkage level. The client activates the corresponding mask and performs inference with the resulting submodel.
+
+As resource availability changes, the client can move between roadmap entries and therefore shrink or expand the active model without retraining, updating the shared parameters, or downloading another checkpoint.
+
+RAS-FL also supports optional deployment-time personalization. A client with a small local adaptation set estimates local structure importance and combines it with the global importance vector. This produces a personalized roadmap while leaving the selected global model parameters unchanged.
 
 ## Experimental Setting
 
