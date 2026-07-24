@@ -291,7 +291,6 @@ Cell 10 generates comparisons including:
 - Use the same backbone scale and optimizer settings where applicable.
 - Report active Slimmable subnetwork parameters rather than stored supernet parameters.
 - Use the final SLEX exit for full-model comparisons.
-- Keep the RAS-FL method name consistent in checkpoints, plots, and tables.
 
 ## Citation
 
