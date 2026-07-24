@@ -8,7 +8,7 @@ RAS-FL trains a shared global model while learning structured importance scores 
 
 The experiments use CIFAR-10 with a VGG-style backbone and compare RAS-FL against FedAvg, FedProx, FedDrop, an OFA-style width supernet, a SLEXNet-style width and early-exit model, and Slimmable Neural Networks.
 
-![RAS-FL framework](figures/ras_fl_framework.png)
+![RAS-FL framework](AAAI_F.png)
 
 ## Framework
 
