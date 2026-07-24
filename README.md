@@ -203,7 +203,7 @@ Evaluates all methods on 20 unseen clients and reports:
 - FLOPs
 - inference time
 
-For RAS-FL, both global and personalized roadmaps are evaluated. The cell also creates CSV files, serialized results, and publication-ready plots.
+For RAS-FL, both global and personalized roadmaps are evaluated. The cell also creates CSV files, serialized results, and plots.
 
 ## Baselines
 
