@@ -1,0 +1,26 @@
+{
+  "reviewed_on": "2026-10-28",
+  "fiarse_tree_sha": "281519c6fb9ac4846fb0098fb6db4ff41849271b",
+  "reference_files": [
+    {
+      "url": "https://raw.githubusercontent.com/HarliWu/FIARSE/main/fiarse/model/model_utils.py",
+      "sha256": "89806a9ee9818d238a8306ff10477470e94ff239c9d224c4dc195d06c57a45a5"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/HarliWu/FIARSE/main/fiarse/server.py",
+      "sha256": "9248af6586af3de6a65d0d511319161e854a9d735ef65b9880568a9398945f88"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/HarliWu/FIARSE/main/fiarse/worker.py",
+      "sha256": "cbe3c9afaeec9437c1af983db60280e022384cb049f83ef5b4bae1dd26a5b57b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/flwrlabs/flower/main/baselines/fjord/fjord/models.py",
+      "sha256": "5be278d770a8b454de3f51427177e955556958a82d3b666fa5a9ffb192438018"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/flwrlabs/flower/main/baselines/fjord/fjord/od/layers/batch_norm.py",
+      "sha256": "45d5458464badec469558c0a7c767d5a7d3b59f311c5b7c23890c9163acc66da"
+    }
+  ]
+}
